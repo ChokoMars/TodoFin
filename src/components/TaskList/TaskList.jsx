@@ -9,6 +9,7 @@ function TaskList({ todos, onDeleted, onToggleCompleted, onEditItem, onToggleEdi
   const elements = todos.map((item) => {
     const { edit, id, ...itemProps } = item;
     // тестики
+    // хуестики
     let classNames = '';
 
     if (edit) {
