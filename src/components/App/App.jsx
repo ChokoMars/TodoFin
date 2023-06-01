@@ -38,8 +38,8 @@ export default class App extends Component {
     }
   };
 
-  addItem = (text) => {
-    const newItem = this.createTodoItem(text);
+  addItem = (text, min, sec) => {
+    const newItem = this.createTodoItem(text, min, sec);
     if (text.trim().length <= 0) {
       return;
     }
@@ -68,7 +68,8 @@ export default class App extends Component {
     if (
       event.target?.name === 'remove' ||
       event.target?.name === 'edit' ||
-      event.target?.className === 'edit'
+      event.target?.className === 'edit' ||
+      event.target?.name === 'timer'
     ) {
       return;
     }
@@ -126,13 +127,15 @@ export default class App extends Component {
     this.onToggleEdit(id);
   };
 
-  createTodoItem(label) {
+  createTodoItem(label, min, sec) {
     return {
       label,
       completed: false,
       id: this.maxId++,
       edit: false,
       date: new Date(),
+      min: min || 0,
+      sec: sec || 0,
     };
   }
 

@@ -11,14 +11,6 @@
   cursor: default;
 }
 
-.filters-box {
-  display: flex;
-}
-
-div.filters-box button.clear-completed {
-  margin-left: auto;
-}
-
 .filters li button {
   display: inline-block;
   color: inherit;
@@ -39,22 +31,4 @@ div.filters-box button.clear-completed {
 
 .filters li button.selected {
   border-color: rgba(175, 47, 47, 0.2);
-}
-
-.clear-completed,
-html .clear-completed:active {
-  position: relative;
-  line-height: 20px;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-.clear-completed:hover {
-  text-decoration: underline;
-}
-
-@media (max-width: 430px) {
-  .filters {
-    bottom: 10px;
-  }
 }

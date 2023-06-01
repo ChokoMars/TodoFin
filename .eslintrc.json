@@ -24,6 +24,7 @@
   },
   "plugins": ["react", "prettier", "import"],
   "rules": {
+    "react/destructuring-assignment": 0,
     "operator-linebreak": 0,
     "react/prefer-stateless-function": 0,
     "class-methods-use-this": 0,
