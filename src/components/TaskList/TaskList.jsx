@@ -8,7 +8,7 @@ import './TaskList.css';
 function TaskList({ todos, onDeleted, onToggleCompleted, onEditItem, onToggleEdit, onSubmit }) {
   const elements = todos.map((item) => {
     const { edit, id, ...itemProps } = item;
-
+    // тестики
     let classNames = '';
 
     if (edit) {
