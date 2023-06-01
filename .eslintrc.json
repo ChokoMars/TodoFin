@@ -24,6 +24,12 @@
   },
   "plugins": ["react", "prettier", "import"],
   "rules": {
+    "jsx-a11y/no-noninteractive-element-interactions": [
+      "warn",
+      {
+        "handlers": ["onClick", "onMouseDown", "onMouseUp", "onKeyPress", "onKeyDown", "onKeyUp"]
+      }
+    ],
     "react/destructuring-assignment": 0,
     "operator-linebreak": 0,
     "react/prefer-stateless-function": 0,
