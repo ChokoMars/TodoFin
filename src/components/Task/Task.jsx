@@ -11,6 +11,8 @@ export default class Task extends Component {
     min: this.props.min,
     sec: this.props.sec,
     timer: false,
+    down: this.props.down,
+    revertValue: '',
   };
 
   componentDidMount() {
@@ -60,7 +62,7 @@ export default class Task extends Component {
 
   render() {
     const { onDeleted, label, completed, onEditItem } = this.props;
-    const { onToggleEdit, edit, id, onSubmit, date } = this.props;
+    const { onToggleEdit, edit, id, onSubmit, date, escFunction } = this.props;
     const { min, sec } = this.state;
     let classNames = 'Task';
 
@@ -123,6 +125,8 @@ export default class Task extends Component {
               type="text"
               className="edit"
               value={label}
+              onClick={() => this.setState({ revertValue: label })}
+              onKeyDown={(ev) => escFunction(ev, id)}
               onChange={(ev) => onEditItem(ev, id)}
             />
           </form>

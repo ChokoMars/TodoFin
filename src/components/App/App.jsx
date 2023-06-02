@@ -98,10 +98,12 @@ export default class App extends Component {
   onToggleEdit = (id) => {
     this.setState(({ todoData }) => {
       const idx = todoData.findIndex((el) => el.id === id);
-
       const oldItem = todoData[idx];
-      const newItem = { ...oldItem, edit: !oldItem.edit };
-
+      if (oldItem.completed) {
+        return null;
+      }
+      const prevValue = oldItem.label;
+      const newItem = { ...oldItem, edit: !oldItem.edit, prevValue };
       const newArray = [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)];
       return {
         todoData: newArray,
@@ -121,6 +123,20 @@ export default class App extends Component {
       });
       return { todoData: newArr };
     });
+  };
+
+  escFunction = (e, id) => {
+    if (e.keyCode === 27) {
+      this.setState(({ todoData }) => {
+        const idx = todoData.findIndex((el) => el.id === id);
+        const oldItem = todoData[idx];
+        const newItem = { ...oldItem, label: oldItem.prevValue, edit: !oldItem.edit };
+
+        const newArray = [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)];
+
+        return { todoData: newArray };
+      });
+    }
   };
 
   deleteCompleted = () => {
@@ -151,6 +167,7 @@ export default class App extends Component {
       min: minValue || 0,
       sec: secValue || 0,
       down,
+      prevValue: '',
     };
   }
 
@@ -168,6 +185,7 @@ export default class App extends Component {
         </header>
         <section className="main">
           <TaskList
+            escFunction={this.escFunction}
             todos={this.filteredItems(todoData, filter)}
             onDeleted={this.deleteItem}
             onToggleCompleted={this.onToggleCompleted}

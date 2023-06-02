@@ -89,7 +89,7 @@
   color: #4d4d4d;
 }
 
-.todo-list li.completed label .title {
+.todo-list li .completed label .title {
   color: #cdcdcd;
   text-decoration: line-through;
 }

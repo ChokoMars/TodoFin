@@ -5,7 +5,15 @@ import Task from '../Task/Task';
 
 import './TaskList.css';
 
-function TaskList({ todos, onDeleted, onToggleCompleted, onEditItem, onToggleEdit, onSubmit }) {
+function TaskList({
+  todos,
+  onDeleted,
+  onToggleCompleted,
+  onEditItem,
+  onToggleEdit,
+  onSubmit,
+  escFunction,
+}) {
   const elements = todos.map((item) => {
     const { edit, id, ...itemProps } = item;
 
@@ -19,6 +27,7 @@ function TaskList({ todos, onDeleted, onToggleCompleted, onEditItem, onToggleEdi
       <li key={id} className={classNames}>
         <div className="pres" onClick={(event) => onToggleCompleted(event, id)} role="presentation">
           <Task
+            escFunction={escFunction}
             onSubmit={onSubmit}
             {...itemProps}
             onDeleted={() => onDeleted(id)}
