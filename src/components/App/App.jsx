@@ -39,7 +39,15 @@ export default class App extends Component {
   };
 
   addItem = (text, min, sec) => {
-    const newItem = this.createTodoItem(text, min, sec);
+    let newDown = false;
+    if (min > 0 || sec > 0) {
+      newDown = true;
+    } else {
+      newDown = false;
+    }
+
+    const newItem = this.createTodoItem(text, min, sec, newDown);
+
     if (text.trim().length <= 0) {
       return;
     }
@@ -127,15 +135,22 @@ export default class App extends Component {
     this.onToggleEdit(id);
   };
 
-  createTodoItem(label, min, sec) {
+  createTodoItem(label, min, sec, down) {
+    let minValue = +min;
+    let secValue = +sec;
+    if (sec > 59) {
+      minValue += Math.trunc(sec / 60);
+      secValue -= Math.trunc(sec / 60) * 60;
+    }
     return {
       label,
       completed: false,
       id: this.maxId++,
       edit: false,
       date: new Date(),
-      min: min || 0,
-      sec: sec || 0,
+      min: minValue || 0,
+      sec: secValue || 0,
+      down,
     };
   }
 

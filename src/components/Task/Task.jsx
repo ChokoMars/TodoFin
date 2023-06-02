@@ -26,17 +26,28 @@ export default class Task extends Component {
       return;
     }
 
-    let { min, sec } = this.state;
-    if (sec <= 0) {
-      if (min === 0) {
-        return;
+    let { min, sec, down } = this.state;
+
+    if (down) {
+      console.log('вниз');
+      if (sec <= 0) {
+        if (min === 0) {
+          return;
+        }
+        min--;
+        sec = 59;
+      } else {
+        sec--;
       }
-      min--;
-      sec = 59;
+      this.setState({ min, sec });
     } else {
-      sec--;
+      console.log('вверх');
+      if (sec === 60) {
+        min++;
+      }
+      sec++;
+      this.setState({ min, sec });
     }
-    this.setState({ min, sec });
   };
 
   playTimer = () => {
