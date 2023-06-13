@@ -1,4 +1,6 @@
-import React, { Component } from 'react';
+/* eslint-disable */
+
+import React, { useState } from 'react';
 
 import Footer from '../Footer';
 import NewTaskForm from '../NewTaskForm';
@@ -6,23 +8,42 @@ import TaskList from '../TaskList';
 
 import './App.css';
 
-export default class App extends Component {
-  maxId = 0;
+function App() {
+  let maxId = 0;
 
-  state = {
-    todoData: [
-      this.createTodoItem('Drink Coffee'),
-      this.createTodoItem('Make Awesome App'),
-      this.createTodoItem('Have a lunch'),
-    ],
-    filter: 'all',
+  function createTodoItem(label, min, sec, down) {
+    let minValue = +min;
+    let secValue = +sec;
+    if (sec > 59) {
+      minValue += Math.trunc(sec / 60);
+      secValue -= Math.trunc(sec / 60) * 60;
+    }
+    return {
+      label,
+      completed: false,
+      id: maxId++,
+      edit: false,
+      date: new Date(),
+      min: minValue || 0,
+      sec: secValue || 0,
+      down,
+      prevValue: '',
+    };
+  }
+
+  const [todoData, setTodoData] = useState([
+    createTodoItem('Drink Coffee'),
+    createTodoItem('Make Awesome App'),
+    createTodoItem('Have a lunch'),
+  ]);
+
+  const [filter, setFilter] = useState('all');
+
+  const changeFilter = (data) => {
+    setFilter(data);
   };
 
-  changeFilter = (data) => {
-    this.setState({ filter: data });
-  };
-
-  filteredItems = (todos, filter) => {
+  const filteredItems = (todos, filter) => {
     switch (filter) {
       case 'All':
         return todos;
@@ -38,7 +59,7 @@ export default class App extends Component {
     }
   };
 
-  addItem = (text, min, sec) => {
+  const addItem = (text, min, sec) => {
     let newDown = false;
     if (min > 0 || sec > 0) {
       newDown = true;
@@ -46,33 +67,23 @@ export default class App extends Component {
       newDown = false;
     }
 
-    const newItem = this.createTodoItem(text, min, sec, newDown);
+    const newItem = createTodoItem(text, min, sec, newDown);
 
     if (text.trim().length <= 0) {
       return;
     }
-    this.setState(({ todoData }) => {
+    setTodoData((todoData) => {
       const newArray = [...todoData, newItem];
 
-      return {
-        todoData: newArray,
-      };
+      return newArray;
     });
   };
 
-  deleteItem = (id) => {
-    this.setState(({ todoData }) => {
-      const idx = todoData.findIndex((el) => el.id === id);
-
-      const newArray = [...todoData.slice(0, idx), ...todoData.slice(idx + 1)];
-
-      return {
-        todoData: newArray,
-      };
-    });
+  const deleteItem = (id) => {
+    setTodoData(() => todoData.filter((item) => item.id !== id));
   };
 
-  onToggleCompleted = (event, id) => {
+  const onToggleCompleted = (event, id) => {
     if (
       event.target?.name === 'remove' ||
       event.target?.name === 'edit' ||
@@ -82,126 +93,97 @@ export default class App extends Component {
       return;
     }
 
-    this.setState(({ todoData }) => {
+    setTodoData((todoData) => {
       const idx = todoData.findIndex((el) => el.id === id);
 
       const oldItem = todoData[idx];
       const newItem = { ...oldItem, completed: !oldItem.completed };
 
       const newArray = [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)];
-      return {
-        todoData: newArray,
-      };
+      return newArray;
     });
   };
 
-  onToggleEdit = (id) => {
-    this.setState(({ todoData }) => {
-      const idx = todoData.findIndex((el) => el.id === id);
-      const oldItem = todoData[idx];
-      if (oldItem.completed) {
-        return null;
-      }
-      const prevValue = oldItem.label;
-      const newItem = { ...oldItem, edit: !oldItem.edit, prevValue };
-      const newArray = [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)];
-      return {
-        todoData: newArray,
-      };
-    });
+  const onToggleEdit = (id) => {
+    setTodoData((todoData) =>
+      todoData.map((el) => {
+        if (el.id === id) {
+          const prevValue = el.label;
+          return (el = { ...el, edit: !el.edit, prevValue });
+        }
+        return el;
+      }),
+    );
   };
 
-  onEditItem = (ev, id) => {
+  const onEditItem = (ev, id) => {
     const text = ev.target.value;
 
-    this.setState(({ todoData }) => {
+    setTodoData((todoData) => {
       const newArr = todoData.slice();
 
       newArr.map((el) => {
         if (el.id === id) el.label = text;
         return el;
       });
-      return { todoData: newArr };
+      return newArr;
     });
   };
 
-  escFunction = (e, id) => {
+  const escFunction = (e, id) => {
     if (e.keyCode === 27) {
-      this.setState(({ todoData }) => {
+      setTodoData((todoData) => {
         const idx = todoData.findIndex((el) => el.id === id);
         const oldItem = todoData[idx];
         const newItem = { ...oldItem, label: oldItem.prevValue, edit: !oldItem.edit };
 
         const newArray = [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)];
 
-        return { todoData: newArray };
+        return newArray;
       });
     }
   };
 
-  deleteCompleted = () => {
-    this.setState(({ todoData }) => {
-      const newArray = todoData.slice().filter((item) => !item.completed);
-      return { todoData: newArray };
+  const deleteCompleted = () => {
+    setTodoData((todoData) => {
+      const newArray = todoData.filter((item) => !item.completed);
+      return newArray;
     });
   };
 
-  onSubmit = (ev, id) => {
+  const onSubmit = (ev, id) => {
     ev.preventDefault();
-    this.onToggleEdit(id);
+    onToggleEdit(id);
   };
 
-  createTodoItem(label, min, sec, down) {
-    let minValue = +min;
-    let secValue = +sec;
-    if (sec > 59) {
-      minValue += Math.trunc(sec / 60);
-      secValue -= Math.trunc(sec / 60) * 60;
-    }
-    return {
-      label,
-      completed: false,
-      id: this.maxId++,
-      edit: false,
-      date: new Date(),
-      min: minValue || 0,
-      sec: secValue || 0,
-      down,
-      prevValue: '',
-    };
-  }
+  const completedCount = todoData.filter((el) => el.completed).length;
+  const todoCount = todoData.length - completedCount;
 
-  render() {
-    const { todoData, filter } = this.state;
-    const completedCount = todoData.filter((el) => el.completed).length;
-
-    const todoCount = todoData.length - completedCount;
-
-    return (
-      <section className="todoapp">
-        <header className="header">
-          <h1>todos</h1>
-          <NewTaskForm onItemAdded={this.addItem} />
-        </header>
-        <section className="main">
-          <TaskList
-            escFunction={this.escFunction}
-            todos={this.filteredItems(todoData, filter)}
-            onDeleted={this.deleteItem}
-            onToggleCompleted={this.onToggleCompleted}
-            onEditItem={this.onEditItem}
-            onToggleEdit={this.onToggleEdit}
-            onSubmit={this.onSubmit}
-          />
-          <Footer
-            toDo={todoCount}
-            completed={completedCount}
-            changeFilter={this.changeFilter}
-            filter={filter}
-            deleteCompleted={this.deleteCompleted}
-          />
-        </section>
+  return (
+    <section className="todoapp">
+      <header className="header">
+        <h1>todos</h1>
+        <NewTaskForm onItemAdded={addItem} />
+      </header>
+      <section className="main">
+        <TaskList
+          escFunction={escFunction}
+          todos={filteredItems(todoData, filter)}
+          onDeleted={deleteItem}
+          onToggleCompleted={onToggleCompleted}
+          onEditItem={onEditItem}
+          onToggleEdit={onToggleEdit}
+          onSubmit={onSubmit}
+        />
+        <Footer
+          toDo={todoCount}
+          completed={completedCount}
+          changeFilter={changeFilter}
+          filter={filter}
+          deleteCompleted={deleteCompleted}
+        />
       </section>
-    );
-  }
+    </section>
+  );
 }
+export default App;

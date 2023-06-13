@@ -1,47 +1,48 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import Task from '../Task/Task';
 
 import './TaskList.css';
 
-function TaskList({
-  todos,
-  onDeleted,
-  onToggleCompleted,
-  onEditItem,
-  onToggleEdit,
-  onSubmit,
-  escFunction,
-}) {
-  const elements = todos.map((item) => {
-    const { edit, id, ...itemProps } = item;
+export default class TaskList extends Component {
+  render() {
+    const { todos, onDeleted, onToggleCompleted, onEditItem, onToggleEdit, onSubmit, escFunction } =
+      this.props;
 
-    let classNames = '';
+    const elements = todos.map((item) => {
+      const { edit, id, ...itemProps } = item;
 
-    if (edit) {
-      classNames = 'editing';
-    }
+      let classNames = '';
 
-    return (
-      <li key={id} className={classNames}>
-        <div className="pres" onClick={(event) => onToggleCompleted(event, id)} role="presentation">
-          <Task
-            escFunction={escFunction}
-            onSubmit={onSubmit}
-            {...itemProps}
-            onDeleted={() => onDeleted(id)}
-            onEditItem={onEditItem}
-            onToggleEdit={() => onToggleEdit(id)}
-            edit={edit}
-            id={id}
-          />
-        </div>
-      </li>
-    );
-  });
+      if (edit) {
+        classNames = 'editing';
+      }
 
-  return <ul className="todo-list">{elements}</ul>;
+      return (
+        <li key={id} className={classNames}>
+          <div
+            className="pres"
+            onClick={(event) => onToggleCompleted(event, id)}
+            role="presentation"
+          >
+            <Task
+              escFunction={escFunction}
+              onSubmit={onSubmit}
+              {...itemProps}
+              onDeleted={() => onDeleted(id)}
+              onEditItem={onEditItem}
+              onToggleEdit={() => onToggleEdit(id)}
+              edit={edit}
+              id={id}
+            />
+          </div>
+        </li>
+      );
+    });
+
+    return <ul className="todo-list">{elements}</ul>;
+  }
 }
 
 TaskList.propTypes = {
@@ -60,5 +61,3 @@ TaskList.propTypes = {
   onEditItem: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
 };
-
-export default TaskList;

@@ -30,6 +30,7 @@
         "handlers": ["onClick", "onMouseDown", "onMouseUp", "onKeyPress", "onKeyDown", "onKeyUp"]
       }
     ],
+    "no-shadow": 0,
     "react/destructuring-assignment": 0,
     "operator-linebreak": 0,
     "react/prefer-stateless-function": 0,

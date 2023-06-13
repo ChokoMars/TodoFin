@@ -4,40 +4,28 @@ import PropTypes from 'prop-types';
 import './TaskFilter.css';
 
 export default class TaskFilter extends Component {
+  buttons = [
+    { name: 'All', label: 'All' },
+    { name: 'Active', label: 'Active' },
+    { name: 'Completed', label: 'Completed' },
+  ];
+
   render() {
     const { changeFilter, filter } = this.props;
 
-    return (
-      <ul className="filters">
-        <li>
-          <button
-            type="button"
-            className={filter === 'All' ? 'selected' : null}
-            onClick={() => changeFilter('All')}
-          >
-            All
+    const buttonsOut = this.buttons.map(({ name, label }) => {
+      const isActive = filter === name;
+      const classes = isActive ? 'selected' : null;
+      return (
+        <li key={name}>
+          <button type="button" className={classes} onClick={() => changeFilter(name)}>
+            {label}
           </button>
         </li>
-        <li>
-          <button
-            type="button"
-            onClick={() => changeFilter('Active')}
-            className={filter === 'Active' ? 'selected' : null}
-          >
-            Active
-          </button>
-        </li>
-        <li>
-          <button
-            type="button"
-            onClick={() => changeFilter('Completed')}
-            className={filter === 'Completed' ? 'selected' : null}
-          >
-            Completed
-          </button>
-        </li>
-      </ul>
-    );
+      );
+    });
+
+    return <ul className="filters">{buttonsOut}</ul>;
   }
 }
 

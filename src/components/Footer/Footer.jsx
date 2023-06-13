@@ -1,23 +1,27 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import TaskFilter from '../TaskFilter/TaskFilter';
 
 import './Footer.css';
 
-function Footer({ toDo, changeFilter, filter, deleteCompleted }) {
-  return (
-    <footer className="footer">
-      <span className="todo-count">
-        {toDo}
-        {' items left'}
-      </span>
-      <TaskFilter changeFilter={changeFilter} filter={filter} />
-      <button type="button" className="clear-completed" onClick={deleteCompleted}>
-        Clear completed
-      </button>
-    </footer>
-  );
+export default class Footer extends Component {
+  render() {
+    const { toDo, changeFilter, filter, deleteCompleted } = this.props;
+
+    return (
+      <footer className="footer">
+        <span className="todo-count">
+          {toDo}
+          {' items left'}
+        </span>
+        <TaskFilter changeFilter={changeFilter} filter={filter} />
+        <button type="button" className="clear-completed" onClick={deleteCompleted}>
+          Clear completed
+        </button>
+      </footer>
+    );
+  }
 }
 
 Footer.defaultProps = {
@@ -31,5 +35,3 @@ Footer.propTypes = {
   changeFilter: PropTypes.func.isRequired,
   deleteCompleted: PropTypes.func.isRequired,
 };
-
-export default Footer;
